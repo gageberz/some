@@ -9,6 +9,9 @@
     h1 {
       color: var(--on-primary);
     }
+    #loading {
+      margin-bottom: 1rem;
+    }
     #results {
       background: var(--card-bg);
       border: 2px solid var(--border);
@@ -39,7 +42,8 @@
 <body>
   <h1>Benchmark Results</h1>
   <button id="runBenchmarkButton">Run Benchmarks</button>
-  <div id="results"></div>
+  <p id="loading"></p>
+  <p id="results"></p>
 
   <script src="task.js"></script>
 </body>

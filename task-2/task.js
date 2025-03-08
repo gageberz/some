@@ -74,9 +74,10 @@ function generateTestData(size) {
     return otherPeople.join(" ");
 }
 
-function runBenchmark() {
+async function runBenchmark() {
     btn.disabled = true;
-    resultsContainer.textContent = "Running benchmarks, this could take a few seconds ...";
+    resultsP.textContent = "";
+    loadingP.textContent = "Running benchmarks, this could take a few seconds ... \n";
 
     const algorithms = [
         { name: "Original", func: courtOriginal },
@@ -84,39 +85,41 @@ function runBenchmark() {
         { name: "Very Optimized", func: courtVeryOptimized },
     ];
 
-    let intermediate = "Averaged across 10 runs using 3 judges, See console for more additional info\n\n";
-    setTimeout(() => {
-        testCases.forEach(testCase => {
-            const other_people = generateTestData(testCase.size);
-            const name = "Klondike";
-            const judges = 3;
-            const runs = 10;
-            const expected = courtVeryOptimized(name, judges, other_people);
-            console.log({ name, judges, other_people, expected });
+    let intermediate = "";
+    for (const testCase of testCases) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
 
-            let output = `${testCase.label}:\n`;
+        const other_people = generateTestData(testCase.size);
+        const name = "Klondike";
+        const judges = 3;
+        const runs = 10;
+        const expected = courtVeryOptimized(name, judges, other_people);
+        console.log({ name, judges, other_people, expected });
 
-            algorithms.forEach(algorithm => {
-                let totalTime = 0;
+        let output = `${testCase.label}:\n`;
 
-                for (let i = 0; i < runs; i++) {
-                    const start = performance.now();
-                    const result = algorithm.func(name, judges, other_people);
-                    const end = performance.now();
-                    console.assert(result === expected, `${algorithm.name} implementation failed`);
-                    totalTime += (end - start);
-                }
-                const averageTime = totalTime / runs;
-                output += `  ${algorithm.name}: ${averageTime.toFixed(3)} ms\n`;
-            });
-            output += "\n";
-            intermediate += output;
+        algorithms.forEach(algorithm => {
+            let totalTime = 0;
+            
+            for (let i = 0; i < runs; i++) {
+                const start = performance.now();
+                const result = algorithm.func(name, judges, other_people);
+                const end = performance.now();
+                console.assert(result === expected, `${algorithm.name} implementation failed`);
+                totalTime += (end - start);
+            }
+            const averageTime = totalTime / runs;
+            output += `    ${algorithm.name}: ${averageTime.toFixed(3)} ms\n`;
         });
-        resultsContainer.textContent = intermediate;
-        btn.disabled = false;
-    }, 100);
+        output += "\n";
+        intermediate += output;
+        resultsP.textContent = intermediate;
+    }
+    loadingP.textContent = "Averaged across 10 runs using 3 judges, see console for additional info\n\n";
+    btn.disabled = false;
 }
 
 const btn = document.querySelector("#runBenchmarkButton");
-const resultsContainer = document.querySelector("#results");
+const resultsP = document.querySelector("#results");
+const loadingP = document.querySelector("#loading");
 btn.addEventListener("click", runBenchmark);
