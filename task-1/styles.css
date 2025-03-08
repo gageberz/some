@@ -41,16 +41,16 @@ h1 {
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: var(--spacing-xs);
 }
 
 .recipe-card-description {
     word-wrap: break-word;
     overflow: hidden;
+    padding-top: var(--spacing-xs);
     transition: max-height var(--transition-speed);
 }
 
-.recipe-card-content > p {
+.recipe-card-content>p {
     /*
     If we care about RTL support, doing a max height is better. line-clamp does not support RTL, ellipsis takes more effort though.
     max-height: calc(var(--line-height) * 10);
@@ -69,7 +69,7 @@ h1 {
     display: none;
 }
 
-.recipe-card:has(.toggle-ingredients-checkbox:checked) .recipe-card-content > p {
+.recipe-card:has(.toggle-ingredients-checkbox:checked) .recipe-card-content>p {
     -webkit-line-clamp: unset;
     line-clamp: unset;
 }
@@ -127,7 +127,7 @@ h1 {
     font-size: 0.95rem;
 }
 
-.ingredient-item input[type="checkbox"]:checked + label {
+.ingredient-item input[type="checkbox"]:checked+label {
     text-decoration: line-through;
     color: var(--text-disabled);
 }
@@ -180,10 +180,11 @@ h1 {
     display: none;
 }
 
-.toggle-ingredients-checkbox:checked + .toggle-text .show-more {
+.toggle-ingredients-checkbox:checked+.toggle-text .show-more {
     display: none;
 }
-.toggle-ingredients-checkbox:checked + .toggle-text .show-less {
+
+.toggle-ingredients-checkbox:checked+.toggle-text .show-less {
     display: inline;
 }
 
