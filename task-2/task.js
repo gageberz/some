@@ -62,16 +62,16 @@ function generateRandomWord() {
     const length = Math.floor(Math.random() * 11) + 1;
     let word = "";
     for (let i = 0; i < length; i++) {
-      const randomChar = String.fromCharCode(97 + Math.floor(Math.random() * 26));
-      word += randomChar;
+        const randomChar = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+        word += randomChar;
     }
 
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
 function generateTestData(size) {
-  const otherPeople = Array.from({ length: size - 1 }, () => generateRandomWord());
-  return otherPeople.join(" ");
+    const otherPeople = new Array(size - 1).fill().map(() => generateRandomWord());
+    return otherPeople.join(" ");
 }
 
 function runBenchmark() {
@@ -83,8 +83,8 @@ function runBenchmark() {
         { name: "Optimized", func: courtOptimized },
         { name: "Very Optimized", func: courtVeryOptimized },
     ];
-    
-    let intermediate = "";
+
+    let intermediate = "Averaged across 10 runs using 3 judges, See console for more additional info\n\n";
     setTimeout(() => {
         testCases.forEach(testCase => {
             const other_people = generateTestData(testCase.size);
@@ -92,12 +92,13 @@ function runBenchmark() {
             const judges = 3;
             const runs = 10;
             const expected = courtVeryOptimized(name, judges, other_people);
+            console.log({ name, judges, other_people, expected });
 
             let output = `${testCase.label}:\n`;
 
             algorithms.forEach(algorithm => {
                 let totalTime = 0;
-                
+
                 for (let i = 0; i < runs; i++) {
                     const start = performance.now();
                     const result = algorithm.func(name, judges, other_people);
